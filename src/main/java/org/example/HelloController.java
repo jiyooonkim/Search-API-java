@@ -1,13 +1,7 @@
 package org.example;
-import co.elastic.clients.elasticsearch.core.SearchResponse;
-import org.elasticsearch.action.index.IndexResponse;
-import org.springframework.http.ResponseEntity;
+import co.elastic.clients.elasticsearch.core.GetResponse;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import co.elastic.clients.elasticsearch.core.search.Hit;
-import co.elastic.clients.json.jackson.JacksonJsonpMapper;
-import org.apache.http.HttpHost;
 
 import java.io.IOException;
 
@@ -23,8 +17,13 @@ public class HelloController {
 
     @GetMapping("/es")
     public String es() throws IOException {
-        System.out.println(elasticsearchConfig.elasticsearchTest());
-        return elasticsearchConfig.elasticsearchTest().toString();
+        System.out.println(elasticsearchConfig.esConnection2());
+        return elasticsearchConfig.esConnection2().toString();
+    }
+
+    @GetMapping("/es1")
+    public GetResponse<Product> es1() throws IOException {
+        return elasticsearchConfig.esConnection3();
     }
 
 //    @GetMapping("/idx")

@@ -9,6 +9,8 @@ public class Product {
     @Setter
     @Id
     private String name;
+    @Id
     private String message;
+//    private String etc;
 
 }
