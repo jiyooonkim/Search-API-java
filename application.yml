@@ -4,11 +4,10 @@ elasticsearch:
   api_key: key
   password: elastic
   id: elastic
+  indecies:
+    studentsIndexName: students
+    testIndexName: tests
 
 spring:
   profiles:
     active: elk
-
-
-#spring.data.elasticsearch.cluster-nodes=localhost:9200
-#spring.data.elasticsearch.cluster-name=my-elasticsearch-cluster

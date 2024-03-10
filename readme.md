@@ -1,8 +1,20 @@
 ### springboot 검색 API 만들기
 #### env 
-oracle java17
-Springboot 3.0.1
-gradle-8.0-bin
++ oracle java17
++ Spring boot 3.0.1
++ gradle-8.0
+
+
+#### ES
++ Low Level vs Hight Level
+  + Low Level
+    + Query 별도 생성 필요
+  + Hight Level
+    + Query Builder 생성
+
+
+
+#### Spring 
 
 
 + ES setting
