@@ -4,6 +4,12 @@
 + Spring boot 3.0.1
 + gradle-8.0
 
+#### Todo list 
++ 오타 교정 API 
++ 연관 상품 상품 API
++ 연관 키워드 API
+
+
 
 #### ES
 + Low Level vs Hight Level

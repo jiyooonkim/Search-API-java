@@ -1,16 +1,14 @@
 package org.example;
 
+import org.springframework.data.annotation.Id;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
-
+@Setter
+@Getter
 public class Product {
-    @Getter
-    @Setter
     @Id
     private String name;
-    @Id
     private String message;
-//    private String etc;
+    private String etc;
 
 }

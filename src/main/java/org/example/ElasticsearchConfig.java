@@ -77,12 +77,13 @@ public class ElasticsearchConfig {
                 .get(
                         g->g
                         .index("my_index")
-                        .id("Jongmin Kim"),
+                        .id("1"),
                         Product.class
                 );
         if (response.found()){
             Product product = response.source();
-            System.out.println("product : " + product);
+            System.out.println("product : " + product.getName());
+            System.out.println("product : " + product.getMessage());
         } else {
             System.out.println("Not found Index!!!");
         }
