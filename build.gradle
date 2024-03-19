@@ -19,6 +19,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    implementation group: 'org.json', name: 'json', version: '20090211'
+
     // ElasticSearch
     implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch:1.2.5.RELEASE")
     implementation("co.elastic.clients:elasticsearch-java:8.12.2")

@@ -4,6 +4,8 @@ elasticsearch:
   api_key: key
   password: elastic
   id: elastic
+  apiKey: RVVzYktJNEI2M2RCTGNORUlOeGM6SnFSTTgwV3RRN21ZLTBrN3dHQ1J0dw==
+  serverURL: http://localhost:9200
   indecies:
     studentsIndexName: students
     testIndexName: tests

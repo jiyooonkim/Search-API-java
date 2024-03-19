@@ -12,7 +12,6 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.message.BasicHeader;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RestClient;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +31,13 @@ public class ElasticsearchConfig {
 
     @Value("${elasticsearch.port}")
     private String port;
+
+
+    @Value("${elasticsearch.serverURL}")
+    private String serverURL;
+
+    @Value("${elasticsearch.apiKey}")
+    private String apiKey;
 
     @Bean
     RestClientTransport esConnection1(
@@ -57,7 +63,28 @@ public class ElasticsearchConfig {
     }
 
     @Bean
-    public GetResponse<Product> esConnection3() throws  IOException{
+    public ElasticsearchClient apiEsConnection() throws  IOException{
+
+        String serverURL = "http://localhost:9200";
+        String apiKey = "RVVzYktJNEI2M2RCTGNORUlOeGM6SnFSTTgwV3RRN21ZLTBrN3dHQ1J0dw==";
+        RestClient restClient = RestClient.builder(
+                HttpHost.create(serverURL)).setDefaultHeaders(
+                new Header[]{
+                        new BasicHeader("Authorization", "ApiKey " + apiKey)
+                }
+        ).build();
+
+        ElasticsearchTransport transport = new RestClientTransport(
+                restClient,
+                new JacksonJsonpMapper()
+        );
+        ElasticsearchClient esClient = new co.elastic.clients.elasticsearch.ElasticsearchClient(transport);
+        return esClient;
+
+    }
+
+    @Bean
+    public GetResponse<Product> getIndexExample() throws  IOException{
         String serverURL = "http://localhost:9200";
         String apiKey = "RVVzYktJNEI2M2RCTGNORUlOeGM6SnFSTTgwV3RRN21ZLTBrN3dHQ1J0dw==";
         RestClient restClient = RestClient.builder(
