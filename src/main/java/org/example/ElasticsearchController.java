@@ -68,6 +68,8 @@ public class ElasticsearchController {
         }
         JSONObject msg = new JSONObject();
         msg.put("name : ", name);
+        msg.put("message : ", message);
+        msg.put("etc : ", etc);
 
         return new ResponseEntity<>(msg.toString(), HttpStatus.OK);
     }
