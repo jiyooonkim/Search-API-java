@@ -3,8 +3,7 @@ package org.example;
 import co.elastic.clients.elasticsearch.core.GetResponse;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonObjectBuilder;
+import org.elasticsearch.client.indices.AnalyzeRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,22 +73,10 @@ public class ElasticsearchController {
         return new ResponseEntity<>(msg.toString(), HttpStatus.OK);
     }
 
-
-
-//    @GetMapping("/idx")
-//    public String idx() throws IOException {
-//        System.out.println(elasticsearchConfig.elasticsearchClient());
-//        return elasticsearchConfig.elasticsearchClient().toString();
-//    }
-
-//    @GetMapping(value ="/item")
-//    public ResponseEntity<String> search(@RequestParam(name = "id") String id) throws IOException{
-//
-//        IndexResponse response = esClient.index
-//
-//        return client;
-//    }
-
+    @GetMapping("anly")
+    public AnalyzeRequest anay(){
+        return elasticsearchConfig.getAnalyzeRequest() ;
+    }
 
 
 

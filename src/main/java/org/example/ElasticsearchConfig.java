@@ -12,7 +12,10 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.message.BasicHeader;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.indices.AnalyzeRequest;
+import org.elasticsearch.client.indices.AnalyzeResponse;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -20,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
+import java.util.List;
 
 // 역할 : 하나 이상의 bean 메소드 제공 및 처리 역할
 @Configuration
@@ -84,7 +88,7 @@ public class ElasticsearchConfig {
     }
 
     @Bean
-    public GetResponse<Product> getIndexExample() throws  IOException{
+    public GetResponse<Product> getIndexExample() throws IOException{
         String serverURL = "http://localhost:9200";
         String apiKey = "RVVzYktJNEI2M2RCTGNORUlOeGM6SnFSTTgwV3RRN21ZLTBrN3dHQ1J0dw==";
         RestClient restClient = RestClient.builder(
@@ -117,6 +121,20 @@ public class ElasticsearchConfig {
 
 
         return response;
+    }
+
+    @Bean
+    public AnalyzeRequest getAnalyzeRequest() throws IOException {
+
+        AnalyzeRequest request = AnalyzeRequest.buildCustomAnalyzer("ngram").build("동해물과 백두산이");
+        AnalyzeResponse response  = apiEsConnection().indices().analyze(request, RequestOptions.DEFAULT);
+        List<AnalyzeResponse.AnalyzeToken> tokens = response.getTokens();
+
+
+
+        System.out.println("ngram 예제 : " + request);
+        return  request ;
+
     }
 
 
