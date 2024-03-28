@@ -3,7 +3,7 @@ package org.example;
 import co.elastic.clients.elasticsearch.core.GetResponse;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
-import org.elasticsearch.client.indices.AnalyzeRequest;
+import org.elasticsearch.client.indices.AnalyzeResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,9 +73,9 @@ public class ElasticsearchController {
         return new ResponseEntity<>(msg.toString(), HttpStatus.OK);
     }
 
-    @GetMapping("anly")
-    public AnalyzeRequest anay(){
-        return elasticsearchConfig.getAnalyzeRequest() ;
+    @GetMapping("sample_analyze")
+    public AnalyzeResponse sample_analyze() throws IOException {
+        return elasticsearchConfig.getAnalyzeRequest();
     }
 
 

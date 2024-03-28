@@ -12,8 +12,12 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.message.BasicHeader;
+import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.AnalyzeRequest;
 import org.elasticsearch.client.indices.AnalyzeResponse;
 import org.springframework.beans.factory.ObjectProvider;
@@ -23,7 +27,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Arrays;
 
 // 역할 : 하나 이상의 bean 메소드 제공 및 처리 역할
 @Configuration
@@ -111,6 +115,8 @@ public class ElasticsearchConfig {
                         .id("1"),
                         Product.class
                 );
+
+
         if (response.found()){
             Product product = response.source();
             System.out.println("product : " + product.getName());
@@ -124,20 +130,82 @@ public class ElasticsearchConfig {
     }
 
     @Bean
-    public AnalyzeRequest getAnalyzeRequest() throws IOException {
+    public AnalyzeResponse getAnalyzeRequest() throws ElasticsearchException, IOException {
 
-        AnalyzeRequest request = AnalyzeRequest.buildCustomAnalyzer("ngram").build("동해물과 백두산이");
-        AnalyzeResponse response  = apiEsConnection().indices().analyze(request, RequestOptions.DEFAULT);
-        List<AnalyzeResponse.AnalyzeToken> tokens = response.getTokens();
+        String apiKey = "RVVzYktJNEI2M2RCTGNORUlOeGM6SnFSTTgwV3RRN21ZLTBrN3dHQ1J0dw==";
+        Header[] headers = new Header[]{
+                new BasicHeader("Authorization", "ApiKey " + apiKey)
+            };
+
+        RestHighLevelClient client = new RestHighLevelClient(
+            RestClient.builder(
+                new HttpHost("localhost", 9200, "http"))
+                .setHttpClientConfigCallback(
+                    httpClientBuilder -> httpClientBuilder.setDefaultHeaders(
+                        Arrays.asList(headers)
+                    )
+                )
+            );
+
+//        AnalyzeRequest request = AnalyzeRequest
+//                .buildCustomAnalyzer("my_ngram2")
+//                .addTokenFilter("lowercase")
+//                .build("동해물과 백두산이");
+//        co.elastic.clients.elasticsearch.indices.AnalyzeResponse response  = esClient.indices().analyze();
+//        List<AnalyzeToken> tokens = response.tokens();
+
+        AnalyzeRequest request = AnalyzeRequest.buildCustomNormalizer()
+                .addTokenFilter("lowercase")
+                .build("<b>BaR</b>").explain(true);
+        org.elasticsearch.client.indices.AnalyzeResponse response = client.indices()
+                .analyze(request, RequestOptions.DEFAULT);
+//        ActionListener<AnalyzeResponse> listener = new ActionListener<AnalyzeResponse>() {
+//            @Override
+//            public void onResponse(AnalyzeResponse analyzeTokens) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Exception e) {
+//
+//            }
+//        };
 
 
 
-        System.out.println("ngram 예제 : " + request);
-        return  request ;
+//        List<AnalyzeToken> tokens = response.tokens();
+//        for (AnalyzeToken token : tokens){
+//            String term = token.token();
+//            System.out.println("term : " + term);
+//        }
+
+
+
+        //        todo : es 에서 hit 기능?
+
+        System.out.println("response 예제 : " + response);
+        client.close();
+
+        return response;
 
     }
 
+//    Create Index
+    @Bean
+    public String createIndexRequest() {
+//        Todo : Create Index
+        return  "Create Index";
+    }
 
+    // Delete Index
+    @Bean
+    public String DeleteIndexRequest() {
+        //        Todo : Delete Index
+        org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest request = new DeleteIndexRequest("my_index");
+//        AcknowledgedResponse deleteIndexResponse = esclient.indices().delete(request, requestOptions);
+//        boolean acknowledged = deleteIndexResponse.
+        return  "Delete Index ";
+    }
 
 
 }
