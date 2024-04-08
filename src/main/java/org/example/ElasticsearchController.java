@@ -15,8 +15,6 @@ import java.io.IOException;
 import org.json.JSONObject;
 import org.json.JSONException;
 
-
-
 @RestController
 public class ElasticsearchController {
     ElasticsearchConfig elasticsearchConfig = new ElasticsearchConfig();
@@ -35,7 +33,7 @@ public class ElasticsearchController {
 
     @GetMapping(value = "/qry")
     public @ResponseBody ResponseEntity<String> search(@RequestParam(name = "id") String id) throws IOException, JSONException {
-//        Usage : http://localhost:8085/qry?id=1
+//        Usage : http://localhost:8087/qry?id=1
         String name = "";
         String message = "";
         String etc = "";
@@ -73,10 +71,6 @@ public class ElasticsearchController {
         return new ResponseEntity<>(msg.toString(), HttpStatus.OK);
     }
 
-    @GetMapping("sample_analyze")
-    public AnalyzeResponse sample_analyze() throws IOException {
-        return elasticsearchConfig.getAnalyzeRequest();
-    }
 
 
 

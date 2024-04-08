@@ -2,10 +2,12 @@ package org.example;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.GetResponse;
+import co.elastic.clients.elasticsearch.indices.analyze.AnalyzeToken;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientOptions;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -13,6 +15,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.message.BasicHeader;
 import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 
 import org.elasticsearch.client.RequestOptions;
@@ -28,24 +31,29 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 // 역할 : 하나 이상의 bean 메소드 제공 및 처리 역할
+@Slf4j
 @Configuration
 @ConfigurationProperties(prefix = "elasticsearch")
 public class ElasticsearchConfig {
-
-    @Value("${elasticsearch.host}")
-    private String host;
-
-    @Value("${elasticsearch.port}")
-    private String port;
+//    ElasticsearchProperty prop = new ElasticsearchProperty();
 
 
-    @Value("${elasticsearch.serverURL}")
-    private String serverURL;
+//    @Value("${elasticsearch.host}")
+//    private String host;
+//
+//    @Value("${elasticsearch.port}")
+//    private String port;
+//
+//
+//    @Value("${elasticsearch.serverURL}")
+//    private String serverURL;
+//
+//    @Value("${elasticsearch.apiKey}")
+//    private String apiKey;
 
-    @Value("${elasticsearch.apiKey}")
-    private String apiKey;
 
     @Bean
     RestClientTransport esConnection1(
@@ -105,90 +113,49 @@ public class ElasticsearchConfig {
         ElasticsearchTransport transport = new RestClientTransport(
                 restClient,
                 new JacksonJsonpMapper()
-        );
+            );
         ElasticsearchClient esClient = new co.elastic.clients.elasticsearch.ElasticsearchClient(transport);
 
         GetResponse<Product> response = esClient
-                .get(
-                        g->g
-                        .index("my_index")
-                        .id("1"),
-                        Product.class
-                );
-
+            .get(
+                g->g
+                .index("my_index")
+                .id("1"),
+                Product.class
+            );
 
         if (response.found()){
             Product product = response.source();
-            System.out.println("product : " + product.getName());
-            System.out.println("product : " + product.getMessage());
+            log.info("Name : {}        Message : {}", product.getName(), product.getMessage());
         } else {
-            System.out.println("Not found Index!!!");
+            System.out.println();
+            log.error("Not found Index!!!");
         }
-
-
         return response;
     }
 
-    @Bean
-    public AnalyzeResponse getAnalyzeRequest() throws ElasticsearchException, IOException {
 
-        String apiKey = "RVVzYktJNEI2M2RCTGNORUlOeGM6SnFSTTgwV3RRN21ZLTBrN3dHQ1J0dw==";
-        Header[] headers = new Header[]{
-                new BasicHeader("Authorization", "ApiKey " + apiKey)
-            };
 
-        RestHighLevelClient client = new RestHighLevelClient(
-            RestClient.builder(
-                new HttpHost("localhost", 9200, "http"))
-                .setHttpClientConfigCallback(
-                    httpClientBuilder -> httpClientBuilder.setDefaultHeaders(
-                        Arrays.asList(headers)
-                    )
-                )
-            );
-
-//        AnalyzeRequest request = AnalyzeRequest
-//                .buildCustomAnalyzer("my_ngram2")
-//                .addTokenFilter("lowercase")
-//                .build("동해물과 백두산이");
-//        co.elastic.clients.elasticsearch.indices.AnalyzeResponse response  = esClient.indices().analyze();
-//        List<AnalyzeToken> tokens = response.tokens();
-
-        AnalyzeRequest request = AnalyzeRequest.buildCustomNormalizer()
-                .addTokenFilter("lowercase")
-                .build("<b>BaR</b>").explain(true);
-        org.elasticsearch.client.indices.AnalyzeResponse response = client.indices()
-                .analyze(request, RequestOptions.DEFAULT);
-//        ActionListener<AnalyzeResponse> listener = new ActionListener<AnalyzeResponse>() {
-//            @Override
-//            public void onResponse(AnalyzeResponse analyzeTokens) {
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Exception e) {
-//
-//            }
+//    @Bean
+//    public RestHighLevelClient getRestHighLevelClient() throws IOException {
+//        String apiKey = prop.getApiKey();
+//        System.out.println("getRestHighLevelClient apiKey : " + apiKey);
+//        Header[] headers = new Header[]{
+//                new BasicHeader("Authorization", "ApiKey " + apiKey)
 //        };
+//
+//        RestHighLevelClient client = new RestHighLevelClient(
+//                RestClient.builder(
+//                                new HttpHost("localhost", 9200, "http"))
+//                        .setHttpClientConfigCallback(
+//                                httpClientBuilder -> httpClientBuilder.setDefaultHeaders(
+//                                        Arrays.asList(headers)
+//                                )
+//                        )
+//        );
+//        return  client;
+//    }
 
-
-
-//        List<AnalyzeToken> tokens = response.tokens();
-//        for (AnalyzeToken token : tokens){
-//            String term = token.token();
-//            System.out.println("term : " + term);
-//        }
-
-
-
-        //        todo : es 에서 hit 기능?
-
-        System.out.println("response 예제 : " + response);
-        client.close();
-
-        return response;
-
-    }
 
 //    Create Index
     @Bean

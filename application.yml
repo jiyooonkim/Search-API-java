@@ -1,11 +1,12 @@
 elasticsearch:
   host: localhost
   port: 9200
-  api_key: key
-  password: elastic
-  id: elastic
+  schema: http
   apiKey: RVVzYktJNEI2M2RCTGNORUlOeGM6SnFSTTgwV3RRN21ZLTBrN3dHQ1J0dw==
   serverURL: http://localhost:9200
+  login:
+    password: elastic
+    id: elastic
   indecies:
     studentsIndexName: students
     testIndexName: tests
