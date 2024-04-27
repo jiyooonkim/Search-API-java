@@ -1,10 +1,14 @@
 package org.analyzer;
 
+import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.indices.AnalyzeResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 /*
@@ -47,9 +51,11 @@ public class AnalyzeController {
         return analyzeConfig.getRestHighLevelClients(host,  port,  schema,  apiKey) ;
     }
 
+
     @GetMapping("/sample_analyze")
-    public AnalyzeResponse sample_analyze() throws IOException {
-        return analyzeConfig.getAnalyzeRequest();
+    @ResponseBody
+    public ResponseEntity<String> sample_analyze(@RequestParam(name = "qry") String qry) throws IOException, ElasticsearchException, JSONException {
+        return analyzeConfig.getAnalyzeRequest(qry);
     }
 
 }
