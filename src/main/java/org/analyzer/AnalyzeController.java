@@ -45,17 +45,22 @@ public class AnalyzeController {
     }
 
     AnalyzeConfig analyzeConfig = new AnalyzeConfig();
-    @GetMapping( "/sampleclient")
+    @GetMapping( "/sample_connect")
     public RestHighLevelClient getRestHighLevelClients() throws IOException {
         System.out.println("analyzeConfig : " + host+ port+ schema);
         return analyzeConfig.getRestHighLevelClients(host,  port,  schema,  apiKey) ;
     }
 
 
-    @GetMapping("/sample_analyze")
+    @GetMapping("/sample_stopanal")
     @ResponseBody
-    public ResponseEntity<String> sample_analyze(@RequestParam(name = "qry") String qry) throws IOException, ElasticsearchException, JSONException {
-        return analyzeConfig.getAnalyzeRequest(qry);
+    public ResponseEntity<String> sample_stopanal(@RequestParam(name = "qry") String qry) throws IOException, ElasticsearchException, JSONException {
+        return analyzeConfig.getStopwordAnalyzeRequest(qry);
     }
 
+    @GetMapping("/sample_synonanal")
+    @ResponseBody
+    public ResponseEntity<String> sample_synonanal(@RequestParam(name = "qry") String qry) throws IOException, ElasticsearchException, JSONException {
+        return analyzeConfig.getSynonAnalyzeRequest(qry);
+    }
 }
