@@ -139,7 +139,7 @@ public class AnalyzeConfig {
                 "synonym_test",
                 "synonym_analyzer",
                 qry
-        );
+            );
 
         AnalyzeResponse response = esConnection().indices()
                 .analyze(request, RequestOptions.DEFAULT);
