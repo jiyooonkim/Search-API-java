@@ -54,13 +54,24 @@ GET fuzzy_test/_search?pretty
 ``` 
 
 
-##### TF-IDF query dsl (Scripted similarity)
+##### TF-IDF with N-gram (Scripted similarity)
 + [painless Variable](https://www.elastic.co/guide/en/elasticsearch/painless/current/painless-similarity-context.html)               
 ```
-   PUT tfidf_typo
+PUT /scripted-similarity-index2 
 {
   "settings": {
     "number_of_shards": 1,
+    "analysis": {
+      "analyzer": {
+        "ngram_analyzer" :{
+          "type": "custom",
+              "filter": [
+                  "lowercase"
+              ],
+              "tokenizer": "ngram"
+        }
+      }
+    }, 
     "similarity": {
       "scripted_tfidf": {
         "type": "scripted",
@@ -69,24 +80,34 @@ GET fuzzy_test/_search?pretty
         }
       }
     }
-  },
+  }, 
+  
   "mappings": {
     "properties": {
-      "correct_cndd": {
+      "field": {
         "type": "text",
-        "similarity": "scripted_tfidf"
+        "similarity": "scripted_tfidf" ,
+        "analyzer": "ngram_analyzer"
       }
     }
   }
 }
-```     
+```
+
+```
+GET /scripted-similarity-index2/_search
+{
+  "query": {
+    "query_string": { 
+      "query": "히알란^0.7",
+      "default_field": "field"
+    }
+  }
+}
+```
 
 + put index 는 [typo_dictionary.py](https://github.com/jiyooonkim/data-engineer/blob/main/commerce/src/nlp/typo_dictionary.py) 참고
-``` 
-
-
-
-``` 
+ 
 
 ##### 오타 교정 API 
 + 유사도 알고리즘
