@@ -55,7 +55,6 @@ GET fuzzy_test/_search?pretty
 
 
 ##### TF-IDF with N-gram (Scripted similarity)
-+ [painless Variable](https://www.elastic.co/guide/en/elasticsearch/painless/current/painless-similarity-context.html)               
 ```
 PUT /scripted-similarity-index2 
 {
@@ -107,7 +106,13 @@ GET /scripted-similarity-index2/_search
 ```
 
 + put index 는 [typo_dictionary.py](https://github.com/jiyooonkim/data-engineer/blob/main/commerce/src/nlp/typo_dictionary.py) 참고
- 
++ scripted 사용시 참고자료[painless Variable](https://www.elastic.co/guide/en/elasticsearch/painless/current/painless-similarity-context.html)
++ _score 튜닝 포인트 찾기 !! 
+
+
+##### BM25 
+
+
 
 ##### 오타 교정 API 
 + 유사도 알고리즘
@@ -116,7 +121,12 @@ GET /scripted-similarity-index2/_search
     + 다른 문서에 질의가 없을수록 높음 -> 사용자 질의가 많을수록 정타일 확률 높음  
   + TF-IDF
     + 문서에 등장횟수 높을수록 score 높음
-    + 
+  + Tokenizer
+    + jaso-analyzer[https://github.com/jiyooonkim/elasticsearch-jaso-analyzer.git]
+      + 자,소 분해 plugin 기능 사용 하고자
+      + 수정사항 
+        + Es 버전 변경 : 8.12.1
+        
 
 
-#### 
+
