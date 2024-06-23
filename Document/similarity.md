@@ -1,7 +1,18 @@
-### 유사도
-#### 
+### 유사도[https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules-similarity.html]
+#### 유사도 알고리즘
++ BM25 
+    + BM : Best Matching N(25) 
+    + 문서 자체에 출현빈도 높아야함 
+    + 복잡도(O(n), n=문서의 단어수)
+    + 한 단어가 문서에 유독 많을 수록 문서 길이 짧을 수록
++ TF-IDF
+    + 계산 방법 간단, 복잡도(O(n), n=문서의 단어수) 낮음 
+    + 빈도 높은 단어에 둔감, 매개변수 조정 어려움
+    + 한 단어가 문서에 유독 많을 수록, 다른 문서 에는 적을 수록 높은 점수 
 
+사용자 질의는 대부분 토큰수가 짧다
 
+등장비율 = 해당토큰/전체토큰
 
 ##### Fuzzy Query
 ``` 
@@ -114,6 +125,7 @@ GET /scripted-similarity-index2/_search
 
 
 ##### BM25 
++ 
 ```
  
 ```
