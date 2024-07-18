@@ -214,7 +214,7 @@
         }
       ```
 
-+ Tiral2. jamo 분리 -> ngram -> Score = 입력 토근(합)/전체 토큰개수
++ Tiral3. jamo 분리 -> ngram -> Score = 입력 토근(합)/전체 토큰개수
   + Index & mapping 정의
     ```
       PUT /typo_beta_search3
