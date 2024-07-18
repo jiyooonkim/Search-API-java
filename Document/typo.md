@@ -112,7 +112,7 @@
         }
       ```
 
-+ Tiral2. jamo 분리 -> ngram -> Scpre = 입력 토근(합)/전체 토큰개수
++ Tiral2. ngram(my_ngram_analyzer 사용) -> Score = 입력 토근(합)/전체 토큰개수
   + Index & mapping 정의
     ```
       PUT /typo_beta_search3
@@ -213,6 +213,97 @@
           }
         }
       ```
+
++ Tiral2. jamo 분리 -> ngram -> Score = 입력 토근(합)/전체 토큰개수
+  + Index & mapping 정의
+    ```
+      PUT /typo_beta_search3
+      {
+        "settings": {
+          "number_of_replicas": "0",
+          "max_ngram_diff": 50,
+          "index": {
+            "similarity": {
+              "scripted_tfidf": {
+                "type": "scripted",
+                "script": { 
+                  "source": "double idf =((term.docFreq+1.0)/(field.docCount+1.0))+1.0;return query.boost * idf;"
+                }
+              }
+            },
+            "analysis": {
+              "filter": {
+                "suggest_filter": {
+                  "type": "ngram",
+                  "min_gram": 2,
+                  "max_gram": 50
+                }
+              },
+              "analyzer": {
+                "my_ngram_analyzer": {
+                  "tokenizer": "my_ngram_tokenizer"
+                },
+                "suggest_search_analyzer": {
+                  "type": "custom",
+                  "tokenizer": "jaso_search_tokenizer"
+                },
+                "suggest_index_analyzer": {
+                  "type": "custom",
+                  "tokenizer": "jaso_index_tokenizer",
+                  "filter": [
+                    "suggest_filter"
+                  ]
+                }
+              },
+              "tokenizer": {
+                "jaso_search_tokenizer": {
+                  "type": "jaso_tokenizer",
+                  "mistype": true,
+                  "chosung": false
+                },
+                "jaso_index_tokenizer": {
+                  "type": "jaso_tokenizer",
+                  "mistype": true,
+                  "chosung": true
+                },
+                "my_ngram_tokenizer": {
+                  "type": "ngram",
+                  "min_gram": "1",
+                  "max_gram": "10"
+                }
+              }
+            }
+          }
+        },
+        "mappings": {
+          "properties": {
+            "field": {
+              "type": "text",
+              "store": true,
+              "similarity": "scripted_tfidf",
+              "analyzer": "suggest_index_analyzer"
+            }
+          }
+        }
+      }
+    ```
+
+  + 문서 검색
+    + scripted_tfidf에 가중치 부여방법 : 질의^배수      ex) 사이다^3
+    ```
+      GET /typo_beta_search3/_search?explain=true
+      {
+        "query": {
+          "query_string": { 
+            "query": "뉴란^3",
+            "default_field": "field"
+          }
+        }
+      }  
+    ```
+    
+
+
 
 ##### 수정사항 & 특이사항   
 + Tokenizer
